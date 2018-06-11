@@ -3,7 +3,11 @@ if [ -z "$THINGYJP_HOME" ]; then
 fi
 
 EASYRSA=./easy-rsa/easyrsa3/easyrsa
-EASYRSA_PKI="$THINGYJP_HOME/pki"
+EASYRSA_PKI_USER="$THINGYJP_HOME/pki_user"
+EASYRSA_PKI_ROOT="$THINGYJP_HOME/pki_root"
+EASYRSA_PKI_SERVER="$THINGYJP_HOME/pki_server"
+EASYRSA_PKI_DEVICE="$THINGYJP_HOME/pki_device"
+LOGFILE="$THINGYJP_HOME/log"
 
 init () {
 	if [ ! -d "$THINGYJP_HOME" ]; then
@@ -11,13 +15,41 @@ init () {
 	fi
 }
 
-easyrsa_pki_init () {
-	if [ ! -d "$EASYRSA_PKI" ]; then
-		echo "pki doesn't exist, creating..."
-		EASYRSA_PKI=$EASYRSA_PKI $EASYRSA init-pki
+easyrsa_pki_user_init () {
+	if [ ! -d "$EASYRSA_PKI_USER" ]; then
+		echo "user pki doesn't exist, creating..."
+		EASYRSA_PKI=$EASYRSA_PKI_USER $EASYRSA init-pki >> $LOGFILE
 	fi
 }
 
-easyrsa_create_csr () {
-	EASYRSA_PKI=$EASYRSA_PKI $EASYRSA --batch --req-cn=$1 gen-req $1 nopass
+easyrsa_pki_root_init () {
+	if [ ! -d "$EASYRSA_PKI_ROOT" ]; then
+		echo "root pki doesn't exist, creating..."
+		EASYRSA_PKI=$EASYRSA_PKI_ROOT $EASYRSA init-pki >> $LOGFILE
+	fi
+}
+
+easyrsa_pki_server_init () {
+	if [ ! -d "$EASYRSA_PKI_SERVER" ]; then
+		echo "server pki doesn't exist, creating..."
+		EASYRSA_PKI=$EASYRSA_PKI_SERVER $EASYRSA init-pki >> $LOGFILE
+	fi
+}
+
+easyrsa_pki_device_init () {
+        if [ ! -d "$EASYRSA_PKI_DEVICE" ]; then
+                echo "device pki doesn't exist, creating..."
+                EASYRSA_PKI=$EASYRSA_PKI_DEVICE $EASYRSA init-pki >> $LOGFILE
+        fi
+}
+
+easyrsa_pki_device_check () {
+	if [ ! -d "$EASYRSA_PKI_DEVICE" ]; then
+		echo "device pki isn't availble"
+		exit 1
+	fi
+}
+
+easyrsa_csr_device_create () {
+	EASYRSA_PKI=$EASYRSA_PKI_USER $EASYRSA --batch --req-cn=$1 gen-req $1 nopass >> $LOGFILE
 }

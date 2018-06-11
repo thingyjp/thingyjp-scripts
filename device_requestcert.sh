@@ -6,11 +6,11 @@ set -x
 source common.sh
 
 init
-easyrsa_pki_init
+easyrsa_pki_user_init
 
 UUID=`uuidgen`
 
 echo "device uuid will be $UUID"
-easyrsa_create_csr $UUID
+easyrsa_csr_device_create $UUID
 
 #TODO send request to self service here
