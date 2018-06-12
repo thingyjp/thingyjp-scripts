@@ -17,4 +17,4 @@ can be installed onto the device.
 Takes a CSR for a device in from stdin and outputs a cert
 bundle with the device cert and the required intermediate
 cert. This is for use by self-service and should never
-by used.
+be used.
