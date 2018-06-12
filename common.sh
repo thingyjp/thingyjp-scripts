@@ -2,6 +2,8 @@ if [ -z "$THINGYJP_HOME" ]; then
 	THINGYJP_HOME="$HOME/.thingyjp"
 fi
 
+THINGYJP_SELFSERVICEURL="http://localhost:5000"
+
 EASYRSA=./easy-rsa/easyrsa3/easyrsa
 EASYRSA_PKI_USER="$THINGYJP_HOME/pki_user"
 EASYRSA_PKI_ROOT="$THINGYJP_HOME/pki_root"

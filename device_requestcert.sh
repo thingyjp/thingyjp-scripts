@@ -1,9 +1,10 @@
 #!/bin/bash
 
+source common.sh
+
 set -e
 set -x
-
-source common.sh
+set -u
 
 init
 easyrsa_pki_user_init
@@ -14,3 +15,6 @@ echo "device uuid will be $UUID"
 easyrsa_csr_device_create $UUID
 
 #TODO send request to self service here
+
+JSON=`jo csr="$(cat $EASYRSA_PKI_USER/reqs/$UUID.req)"`
+curl -H "Content-Type: application/json" -d "$JSON" "$THINGYJP_SELFSERVICEURL/device/commission"

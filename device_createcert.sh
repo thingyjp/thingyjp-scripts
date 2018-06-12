@@ -20,10 +20,10 @@ if [ -z "$UUID" ]; then
 fi
 
 {
-	$EASYRSA --pki=$EASYRSA_PKI_DEVICE \
+	$EASYRSA --pki-dir=$EASYRSA_PKI_DEVICE \
 		 --batch \
 		 import-req $CSR $UUID
-	$EASYRSA --pki=$EASYRSA_PKI_DEVICE \
+	$EASYRSA --pki-dir=$EASYRSA_PKI_DEVICE \
 		 --batch \
 		 --req-cn="$UUID" \
 		 sign-req client "$UUID"
