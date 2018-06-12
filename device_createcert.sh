@@ -1,21 +1,34 @@
 #!/bin/bash
 
-set -e
-set -x
-
-if [ $# -ne 1 ]; then
-	exit 1
-fi
-
 source common.sh
+
+set -e
+set -u
 
 init
 easyrsa_pki_device_check
 
-cat > /tmp/file
+CSR=/tmp/file
 
-EASYRSA_PKI=$EASYRSA_PKI_DEVICE $EASYRSA import-req /tmp/file $1
-EASYRSA_PKI=$EASYRSA_PKI_DEVICE $EASYRSA --batch --req-cn="$1" sign-req client "$1"
+cat > $CSR
 
-cat $EASYRSA_PKI_DEVICE/issued/$1.crt
-cat $EASYRSA_PKI_DEVICE/ca.crt
+UUID=`openssl req -noout -subject -in $CSR | \
+	grep -Po "(?<=CN = )[0-9,a-z]{8}-[0-9,a-z]{4}-[0-9,a-z]{4}-[0-9,a-z]{4}-[0-9,a-z]{12}"`
+
+if [ -z "$UUID" ]; then
+	exit 1;
+fi
+
+{
+	$EASYRSA --pki=$EASYRSA_PKI_DEVICE \
+		 --batch \
+		 import-req $CSR $UUID
+	$EASYRSA --pki=$EASYRSA_PKI_DEVICE \
+		 --batch \
+		 --req-cn="$UUID" \
+		 sign-req client "$UUID"
+} &>> $LOGFILE
+
+openssl x509 -inform pem -in $EASYRSA_PKI_DEVICE/issued/$UUID.crt
+openssl x509 -inform pem -in $EASYRSA_PKI_DEVICE/ca.crt
+
