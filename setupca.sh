@@ -1,8 +1,9 @@
 #!/bin/bash
 
-set -e
-
 source ./common.sh
+
+set -e
+set -u
 
 init
 easyrsa_pki_root_init
@@ -28,7 +29,9 @@ createsubca () {
 $EASYRSA --pki-dir=$EASYRSA_PKI_ROOT \
 	 --batch \
 	 --req-cn="thingy.jp root CA" \
-	 build-ca nopass
+	 build-ca nopass &>> $LOGFILE
 
 createsubca $EASYRSA_PKI_SERVER "thingy.jp server CA" "serverca"
 createsubca $EASYRSA_PKI_DEVICE "thingy.jp device CA" "deviceca"
+
+ln -s $EASYRSA_PKI_ROOT/ca.crt $THINGYJP_ROOTCERT

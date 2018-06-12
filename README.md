@@ -28,4 +28,3 @@ be used.
 Takes the FQDN for the server as an argument and generates
 a server cert signed with the server CA.
 
-
