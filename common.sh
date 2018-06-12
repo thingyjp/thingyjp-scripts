@@ -52,6 +52,13 @@ easyrsa_pki_device_check () {
 	fi
 }
 
+easyrsa_pki_server_check () {
+	if [ ! -d "$EASYRSA_PKI_SERVER" ]; then
+		echo "server pki isn't available"
+		exit 1
+	fi
+}
+
 easyrsa_csr_device_create () {
 	EASYRSA_PKI=$EASYRSA_PKI_USER $EASYRSA --batch --req-cn=$1 gen-req $1 nopass >> $LOGFILE
 }
