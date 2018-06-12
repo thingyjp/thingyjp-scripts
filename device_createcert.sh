@@ -31,4 +31,3 @@ fi
 
 openssl x509 -inform pem -in $EASYRSA_PKI_DEVICE/issued/$UUID.crt
 openssl x509 -inform pem -in $EASYRSA_PKI_DEVICE/ca.crt
-
