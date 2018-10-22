@@ -7,12 +7,13 @@ git_init () {
 }
 
 git_stamp () {
-    REPO=$2
-    MSG=$1
-	git -C $REPO add -A
-	git -C $REPO commit --allow-empty -a -m "$MSG"
+    REPO=$1
+    MSG=$2
+    git -C $REPO add -A
+    git -C $REPO commit --allow-empty -a -m "$MSG"
 }
 
 git_abort () {
-	git -C $1 reset HEAD^
+    REPO=$1
+    git -C $REPO reset HEAD^
 }

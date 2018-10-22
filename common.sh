@@ -89,15 +89,3 @@ easyrsa_pki_server_check () {
 	fi
 }
 
-easyrsa_csr_device_create () {
-	EASYRSA_PKI=$EASYRSA_PKI_USER $EASYRSA --batch --req-cn=$1 gen-req $1 nopass >> $LOGFILE
-	git_stamp "creating csr for $1" $EASYRSA_PKI_USER
-}
-
-easyrsa_csr_device_abort () {
-	git_abort $EASYRSA_PKI_USER
-}
-
-easyrsa_csr_device_finalise () {
-	git_stamp "certificate received for $1" $EASYRSA_PKI_USER
-}
