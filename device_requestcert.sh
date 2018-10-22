@@ -20,8 +20,7 @@ easyrsa_csr_device_create $UUID
 JSON=`jo csr="$(cat $EASYRSA_PKI_USER/reqs/$UUID.req)"`
 
 set +e
-curl --fail \
-	--cacert "$THINGYJP_ROOTCERT" \
+curl --cacert "$THINGYJP_ROOTCERT" \
 	-H "Content-Type: application/json" \
 	-d "$JSON" "$THINGYJP_SELFSERVICEURL/device/commission"
 if [ "$?" -ne "0" ]; then

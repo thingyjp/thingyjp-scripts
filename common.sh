@@ -47,6 +47,8 @@ easyrsa_pki_init () {
 		echo "$1 pki doesn't exist, creating..."
 		EASYRSA_PKI=$2 $EASYRSA init-pki >> $LOGFILE
 		git -C $2 init
+		git -C $2 config user.email "$1"
+		git -C $2 config user.name "$1"
 		git -C $2 add -A
 		git -C $2 commit --allow-empty -a -m "create pki"
 	fi
