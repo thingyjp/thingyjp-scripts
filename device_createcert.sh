@@ -20,13 +20,8 @@ if [ -z "$UUID" ]; then
 fi
 
 {
-	$EASYRSA --pki-dir=$EASYRSA_PKI_DEVICE \
-		 --batch \
-		 import-req $CSR $UUID
-	$EASYRSA --pki-dir=$EASYRSA_PKI_DEVICE \
-		 --batch \
-		 --req-cn="$UUID" \
-		 sign-req client "$UUID"
+	easyrsa_device_csr_import $UUID $CSR
+	easyrsa_device_csr_sign $UUID
 } &>> $LOGFILE
 
 openssl x509 -inform pem -in $EASYRSA_PKI_DEVICE/issued/$UUID.crt

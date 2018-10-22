@@ -16,6 +16,9 @@ EASYRSA_PKI_SERVER="$THINGYJP_HOME/pki_server"
 EASYRSA_PKI_DEVICE="$THINGYJP_HOME/pki_device"
 LOGFILE="$THINGYJP_HOME/log"
 
+source git.inc
+source easyrsa.inc
+
 init () {
 	if [ ! -d "$THINGYJP_HOME" ]; then
 		mkdir "$THINGYJP_HOME"
@@ -34,6 +37,11 @@ checkdeps () {
 		echo "install uuid-runtime"
 		exit 1
 	fi
+	which jq
+	if [ "$?" -ne "0" ]; then
+		echo "install jq"
+		exit 1
+	fi
 	which jo
 	if [ "$?" -ne "0" ]; then
 		echo "install jo"
@@ -46,11 +54,8 @@ easyrsa_pki_init () {
 	if [ ! -d "$2" ]; then
 		echo "$1 pki doesn't exist, creating..."
 		EASYRSA_PKI=$2 $EASYRSA init-pki >> $LOGFILE
-		git -C $2 init
-		git -C $2 config user.email "$1"
-		git -C $2 config user.name "$1"
-		git -C $2 add -A
-		git -C $2 commit --allow-empty -a -m "create pki"
+		mkdir $2/issued
+		git_init $1 $2
 	fi
 }
 
@@ -84,20 +89,15 @@ easyrsa_pki_server_check () {
 	fi
 }
 
-easyrsa_pki_stamp () {
-	git -C $2 add -A
-	git -C $2 commit --allow-empty -a -m "$1"
-}
-
-easyrsa_pki_abort () {
-	git -C $1 reset HEAD^
-}
-
 easyrsa_csr_device_create () {
 	EASYRSA_PKI=$EASYRSA_PKI_USER $EASYRSA --batch --req-cn=$1 gen-req $1 nopass >> $LOGFILE
-	easyrsa_pki_stamp "creating csr for $1" $EASYRSA_PKI_USER
+	git_stamp "creating csr for $1" $EASYRSA_PKI_USER
 }
 
 easyrsa_csr_device_abort () {
-	easyrsa_pki_abort $EASYRSA_PKI_USER
+	git_abort $EASYRSA_PKI_USER
+}
+
+easyrsa_csr_device_finalise () {
+	git_stamp "certificate received for $1" $EASYRSA_PKI_USER
 }
