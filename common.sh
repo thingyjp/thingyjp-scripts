@@ -1,6 +1,6 @@
 if [ -z "$THINGYJP_HOME" ]; then
 	if [ -z "$HOME" ]; then
-		echo "THINGYJP_HOME and HOME are not set, check your environment"
+		echo "THINGYJP_HOME and HOME are not set, check your environment" >&2
 		exit 1
 	fi
 	THINGYJP_HOME="$HOME/.thingyjp"
