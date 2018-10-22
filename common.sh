@@ -3,7 +3,7 @@ if [ -z "$THINGYJP_HOME" ]; then
 fi
 
 THINGYJP_ROOTCERT=$THINGYJP_HOME/thingyjp_root.crt
-THINGYJP_SELFSERVICEURL="http://selfservice.thingy.jp"
+THINGYJP_SELFSERVICEURL="http://selfservice.thingy.jp/wtf"
 
 EASYRSA=./easy-rsa/easyrsa3/easyrsa
 EASYRSA_PKI_USER="$THINGYJP_HOME/pki_user"
@@ -16,6 +16,26 @@ init () {
 	if [ ! -d "$THINGYJP_HOME" ]; then
 		mkdir "$THINGYJP_HOME"
 	fi
+}
+
+checkdeps () {
+	set +e
+	which curl
+	if [ "$?" -ne "0" ]; then
+		echo "install curl"
+		exit 1
+	fi
+	which uuidgen
+	if [ "$?" -ne "0" ]; then
+		echo "install uuid-runtime"
+		exit 1
+	fi
+	which jo
+	if [ "$?" -ne "0" ]; then
+		echo "install jo"
+		exit 1
+	fi
+	set -e
 }
 
 easyrsa_pki_init () {

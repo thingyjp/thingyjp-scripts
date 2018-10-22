@@ -6,6 +6,7 @@ set -e
 set -x
 set -u
 
+checkdeps
 init
 easyrsa_pki_user_init
 
