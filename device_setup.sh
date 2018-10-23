@@ -18,6 +18,11 @@ easyrsa_device_pki_init
 CACERT=$1
 CAKEY=$2
 
+$EASYRSA --pki-dir=$EASYRSA_PKI_DEVICE \
+            --batch \
+            --req-cn="dummy" \
+            build-ca nopass subca
+git_stamp $EASYRSA_PKI_DEVICE "ca created"
 cp $CACERT $EASYRSA_PKI_DEVICE/ca.crt 
 cp $CAKEY $EASYRSA_PKI_DEVICE/private/ca.key
 git_stamp $EASYRSA_PKI_DEVICE "installed signing certs"
