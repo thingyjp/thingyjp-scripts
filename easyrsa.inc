@@ -27,7 +27,7 @@ easyrsa_device_pki_doesntexist () {
 
 easyrsa_device_csr_create () {
     UUID=$1
-	EASYRSA_PKI=$EASYRSA_PKI_USER $EASYRSA --batch --req-cn=$UUID gen-req $UUID nopass &>> $LOGFILE
+	EASYRSA_PKI=$EASYRSA_PKI_USER $EASYRSA --batch --req-cn=$UUID gen-req device-$UUID nopass &>> $LOGFILE
 	git_stamp $EASYRSA_PKI_USER "creating csr for $UUID"
 }
 

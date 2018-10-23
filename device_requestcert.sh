@@ -3,8 +3,8 @@
 source common.sh
 
 set -e
-#set -x
 set -u
+#set -x
 
 checkdeps
 init
@@ -15,7 +15,7 @@ UUID=`uuidgen`
 echo "device uuid will be $UUID"
 easyrsa_device_csr_create $UUID
 
-JSON_REQUEST=`jo csr="$(cat $EASYRSA_PKI_USER/reqs/$UUID.req)"`
+JSON_REQUEST=`jo csr="$(cat $EASYRSA_PKI_USER/reqs/device-$UUID.req)"`
 
 set +e
 JSON_RESPONSE=`curl --silent --cacert "$THINGYJP_ROOTCERT" \
@@ -27,11 +27,12 @@ if [ "$?" -ne "0" ]; then
 	exit 1
 fi
 
-ERROR=`echo $JSON_RESPONSE | jq -r .error >\
-        $EASYRSA_PKI_USER/issued/$UUID.crt`
+ERROR=`echo $JSON_RESPONSE | jq -r .error`
 
 if [ ! -z "$ERROR" ]; then
     echo "server returned error; $ERROR"
+    easyrsa_device_csr_abort
+    exit 1
 fi
 set -e
 
