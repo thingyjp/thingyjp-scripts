@@ -6,7 +6,7 @@ set -e
 set -u
 
 init
-easyrsa_pki_device_check
+easyrsa_device_pki_exists
 
 CSR=/tmp/file
 

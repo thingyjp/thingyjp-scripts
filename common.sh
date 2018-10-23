@@ -27,22 +27,22 @@ init () {
 
 checkdeps () {
 	set +e
-	which curl
+	which curl &> /dev/null
 	if [ "$?" -ne "0" ]; then
 		echo "install curl"
 		exit 1
 	fi
-	which uuidgen
+	which uuidgen &> /dev/null
 	if [ "$?" -ne "0" ]; then
 		echo "install uuid-runtime"
 		exit 1
 	fi
-	which jq
+	which jq &> /dev/null
 	if [ "$?" -ne "0" ]; then
 		echo "install jq"
 		exit 1
 	fi
-	which jo
+	which jo &> /dev/null
 	if [ "$?" -ne "0" ]; then
 		echo "install jo"
 		exit 1
@@ -50,14 +50,7 @@ checkdeps () {
 	set -e
 }
 
-easyrsa_pki_init () {
-	if [ ! -d "$2" ]; then
-		echo "$1 pki doesn't exist, creating..."
-		EASYRSA_PKI=$2 $EASYRSA init-pki >> $LOGFILE
-		mkdir $2/issued
-		git_init $1 $2
-	fi
-}
+
 
 easyrsa_pki_user_init () {
 	easyrsa_pki_init "user" $EASYRSA_PKI_USER
@@ -71,16 +64,7 @@ easyrsa_pki_server_init () {
 	easyrsa_pki_init "server" $EASYRSA_PKI_SERVER
 }
 
-easyrsa_pki_device_init () {
-	easyrsa_pki_init "device" $EASYRSA_PKI_DEVICE
-}
 
-easyrsa_pki_device_check () {
-	if [ ! -d "$EASYRSA_PKI_DEVICE" ]; then
-		echo "device pki isn't availble"
-		exit 1
-	fi
-}
 
 easyrsa_pki_server_check () {
 	if [ ! -d "$EASYRSA_PKI_SERVER" ]; then

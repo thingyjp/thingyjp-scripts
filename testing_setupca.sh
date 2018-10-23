@@ -6,9 +6,12 @@ set -e
 set -u
 
 init
+
+easyrsa_device_pki_doesntexist
+
 easyrsa_pki_root_init
 easyrsa_pki_server_init
-easyrsa_pki_device_init
+easyrsa_device_pki_init
 
 createsubca () {
 	{
@@ -23,6 +26,7 @@ createsubca () {
 			 --batch \
 		 	sign-req ca $3
 		cp $EASYRSA_PKI_ROOT/issued/$3.crt $1/ca.crt
+		git_stamp $1 "created subca $3" 
 	} &>> $LOGFILE
 }
 

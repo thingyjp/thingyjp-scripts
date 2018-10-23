@@ -4,11 +4,16 @@
 
 Pull in the required submodules etc.
 
-## setupca.sh
+## testing_setupca.sh
 
 Create a crappy CA setup that mirrors what thingy.jp's
 self-service uses. This is for testing only and should
 never be used.
+
+## device_setup.sh
+
+Creates a PKI for signing device certs and installs
+the provided certs and keys.
 
 ## device_requestcert.sh
 
