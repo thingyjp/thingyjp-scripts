@@ -25,4 +25,7 @@ fi
 } &>> $LOGFILE
 
 openssl x509 -inform pem -in $EASYRSA_PKI_DEVICE/issued/$UUID.crt
+for intermediate in $EASYRSA_PKI_DEVICE/intermediates/*.crt; do
+    openssl x509 -inform pem -in $intermediate
+done
 openssl x509 -inform pem -in $EASYRSA_PKI_DEVICE/ca.crt
