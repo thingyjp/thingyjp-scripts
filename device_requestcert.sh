@@ -27,9 +27,9 @@ if [ "$?" -ne "0" ]; then
 	exit 1
 fi
 
-ERROR=`echo $JSON_RESPONSE | jq -r .error`
+ERROR=`echo $JSON_RESPONSE | jq -e -r .error`
 
-if [ ! -z "$ERROR" ]; then
+if [ "$?" -e "0" ]; then
     echo "server returned error; $ERROR"
     easyrsa_device_csr_abort
     exit 1
