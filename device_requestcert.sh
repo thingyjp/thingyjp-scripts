@@ -8,7 +8,7 @@ set -u
 
 checkdeps
 init
-easyrsa_pki_user_init
+easyrsa_user_pki_init
 
 UUID=`uuidgen`
 
@@ -29,7 +29,7 @@ fi
 
 ERROR=`echo $JSON_RESPONSE | jq -e -r .error`
 
-if [ "$?" -e "0" ]; then
+if [ "$?" -eq "0" ]; then
     echo "server returned error; $ERROR"
     easyrsa_device_csr_abort
     exit 1

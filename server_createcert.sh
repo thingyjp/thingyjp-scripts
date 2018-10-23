@@ -20,7 +20,7 @@ easyrsa_pki_user_init
 	$EASYRSA --pki-dir=$EASYRSA_PKI_USER \
 		 --batch \
 		 --req-cn=$FQDN \
-		 --subject-alt-name='DNS:public.thingy.jp' \
+		 --subject-alt-name='DNS:public.mqtt.thingy.jp' \
 		gen-req $FQDN nopass
 
 	$EASYRSA --pki-dir=$EASYRSA_PKI_SERVER \

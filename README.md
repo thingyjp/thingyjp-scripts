@@ -12,7 +12,7 @@ never be used.
 
 ## device_setup.sh
 
-Creates a PKI for signing device certs and installs
+Creates a sub-CA for signing device certs and installs
 the provided certs and keys.
 
 ## device_requestcert.sh
@@ -27,6 +27,11 @@ Takes a CSR for a device in from stdin and outputs a cert
 bundle with the device cert and the required intermediate
 cert. This is for use by self-service and should never
 be used.
+
+## server_setup.h
+
+Creates a sub-CA for signing server certs and installs
+the provided certs and keys.
 
 ## server_createcert.sh
 

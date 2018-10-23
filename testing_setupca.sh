@@ -4,38 +4,39 @@ source ./common.sh
 
 set -e
 set -u
+set -x
 
 init
 
 easyrsa_device_pki_doesntexist
 
-easyrsa_pki_root_init
-easyrsa_pki_server_init
+easyrsa_test_pki_init
+easyrsa_server_pki_init
 easyrsa_device_pki_init
 
 createsubca () {
 	{
-		$EASYRSA --pki-dir=$1 \
+        SUBCAPKI=$1
+        SUBCACN=$2
+		$EASYRSA --pki-dir=$SUBCAPKI \
 			 --batch \
-		 	 --req-cn="$2" \
+		 	 --req-cn="$SUBCACN" \
 		 	 build-ca nopass subca
-		$EASYRSA --pki-dir=$EASYRSA_PKI_ROOT \
+		$EASYRSA --pki-dir=$EASYRSA_PKI_TEST \
 			 --batch \
-		 	import-req $1/reqs/ca.req $3
-		$EASYRSA --pki-dir=$EASYRSA_PKI_ROOT \
+		 	import-req $SUBCAPKI/reqs/ca.req $SUBCACN
+		$EASYRSA --pki-dir=$EASYRSA_PKI_TEST \
 			 --batch \
-		 	sign-req ca $3
-		cp $EASYRSA_PKI_ROOT/issued/$3.crt $1/ca.crt
-		git_stamp $1 "created subca $3" 
+		 	sign-req ca $SUBCACN
+		cp "$EASYRSA_PKI_TEST/issued/$SUBCACN.crt" $SUBCAPKI/ca.crt
+		git_stamp $SUBCAPKI "created subca $SUBCACN" 
 	} &>> $LOGFILE
 }
 
-$EASYRSA --pki-dir=$EASYRSA_PKI_ROOT \
-	 --batch \
-	 --req-cn="thingy.jp root CA" \
-	 build-ca nopass &>> $LOGFILE
+createsubca $EASYRSA_PKI_SERVER "serverca"
+createsubca $EASYRSA_PKI_DEVICE "deviceca"
 
-createsubca $EASYRSA_PKI_SERVER "thingy.jp server CA" "serverca"
-createsubca $EASYRSA_PKI_DEVICE "thingy.jp device CA" "deviceca"
+easyrsa_csr_create $EASYRSA_PKI_TEST localhost localhost
+easyrsa_csr_sign_server $EASYRSA_PKI_TEST localhost localhost
 
-ln -s $EASYRSA_PKI_ROOT/ca.crt $THINGYJP_ROOTCERT
+ln -s $EASYRSA_PKI_TEST/ca.crt $THINGYJP_ROOTCERT
